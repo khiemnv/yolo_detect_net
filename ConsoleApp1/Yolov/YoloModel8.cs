@@ -1,6 +1,9 @@
 ﻿
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -64,5 +67,6 @@ namespace Yolov
 
             return result.ToList();
         }
+
     }
 }

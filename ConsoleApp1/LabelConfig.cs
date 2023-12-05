@@ -7,6 +7,6 @@ namespace ConsoleApp1
     {
         public IDictionary<int, string> _dict = new Dictionary<int, string>();
         public IDictionary<string, string> _dict2 = new Dictionary<string, string>();
-        public Dictionary<string, Brush> d;
+        public Dictionary<string, int> d;
     }
 }
