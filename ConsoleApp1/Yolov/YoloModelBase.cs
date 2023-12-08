@@ -260,22 +260,26 @@ namespace Yolov
             return (value < min) ? min : (value > max) ? max : value;
         }
 
-        public List<PredictionBox> Detect(string img_path, string model_path)
+        virtual public List<PredictionBox> Detect(string img_path, string model_path)
         {
-            ReadModel(model_path);
+            if (!string.IsNullOrEmpty(model_path))
+            {
+                ReadModel(model_path);
+            }
+            if (!string.IsNullOrEmpty(img_path))
+            {
+                var image = SixLabors.ImageSharp.Image.Load<Rgba32>(img_path);
+                //var clone = image.Clone();
+                int w = image.Width;
+                int h = image.Height;
 
-            var image = SixLabors.ImageSharp.Image.Load<Rgba32>(img_path);
-            var clone = image.Clone();
-            int w = image.Width;
-            int h = image.Height;
-            var outputs = Inference(clone);
-            var output0 = outputs[0];
-            //var output1 = outputs[1];
-            var raw = ParseDetect(outputs[0], w, h);
-            var boxes = Suppress(raw);
+                var outputs = Inference(image);
+                var raw = ParseDetect(outputs[0], w, h);
+                var boxes = Suppress(raw);
 
-
-            return boxes;
+                return boxes;
+            }
+            return null;
         }
 
 
@@ -284,10 +288,10 @@ namespace Yolov
             ReadModel(model_path);
 
             var image = Image.Load<Rgba32>(img_path);
-            var clone = image.Clone();
+            //var clone = image.Clone();
             int w = image.Width;
             int h = image.Height;
-            var outputs = Inference(clone);
+            var outputs = Inference(image);
 
             // { box_x, box_y, box_w, box_h, confidence, class 1, ..., class 80, mask 1, mask2, ..., mask 32}
             var output0 = outputs[0]; // [1,38,8400] classes.count = 2
@@ -418,7 +422,7 @@ namespace Yolov
         }
 
 
-        private List<DenseTensor<float>> Inference(Image<Rgba32> image)
+        virtual protected List<DenseTensor<float>> Inference(Image<Rgba32> image)
         {
             if (image.Width != _model.Width || image.Height != _model.Height)
             {
