@@ -37,13 +37,15 @@ if (true)
     cp.Init(new LabelConfig { _dict = ObjDetectYolo.labelDict });
     foreach(var box in pcb.boxes)
     {
-        var FontSize = 3;
-        var Thickness = 3;
-        Cv2.Rectangle(originImage, new Rect((int)box.X, (int)box.Y, (int)box.W, (int)box.H), Scalar.Blue, Thickness);
-        var baseLine = 5;
-        var labelSize = Cv2.GetTextSize(box.LabelName, HersheyFonts.HersheyDuplex, FontSize, 10, out baseLine);
+        var fontScale = 3;
+        var fontFace = HersheyFonts.HersheyDuplex;
+        var thickness = 3;
+        var alpha = 0.5;
+        var padding = 10;
+        Cv2.Rectangle(originImage, new Rect((int)box.X, (int)box.Y, (int)box.W, (int)box.H), Scalar.Blue, thickness);
+        var labelSize = Cv2.GetTextSize(box.LabelName, fontFace, fontScale, 10, out int _);
         var minX = (int)box.X;
-        var minY = (int)box.Y - labelSize.Height;
+        var minY = (int)box.Y - labelSize.Height - 2*padding;
         var maxX = minX + labelSize.Width;
         if (minX > originImage.Width) { maxX = originImage.Width; }
         if (minY < 0) { minY = 0; }
@@ -53,10 +55,12 @@ if (true)
         var subImg = originImage.SubMat(labelRect);
         var blueRect = subImg.Clone();
         Cv2.Rectangle(blueRect, new Rect(0,0, maxX - minX, maxY - minY), Scalar.FromRgb(color.r,color.g, color.b), -1);
-        Cv2.AddWeighted(subImg, 0.5, blueRect, 0.5, 1.0, subImg);
-        Cv2.PutText(originImage, box.LabelName, new Point(box.X, box.Y), HersheyFonts.HersheyDuplex, FontSize, Scalar.White, Thickness);
+        Cv2.AddWeighted(subImg, alpha, blueRect, 1- alpha, 1.0, subImg);
+        Cv2.PutText(subImg, box.LabelName, new Point(0, labelSize.Height + padding), fontFace, fontScale, Scalar.White, thickness);
+        //subImg.SaveImage("subImg.jpeg");
+        //Cv2.PutText(originImage, box.LabelName, new Point(box.X, box.Y), fontFace, fontScale, Scalar.White, thickness);
         originImage[labelRect] = subImg;
-        originImage.SaveImage("crop2.jpeg");
+        //originImage.SaveImage("crop2.jpeg");
     }
     originImage.SaveImage("crop2.jpeg");
 
