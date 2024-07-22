@@ -1,0 +1,11 @@
+<body>
+    <h1>Hello World!</h1>
+
+    <script>
+        function notify(msg) {
+            alert(msg);
+        }
+
+        window.chrome.webview.postMessage(JSON.stringify({ url: window.document.URL }));
+    </script>
+</body>

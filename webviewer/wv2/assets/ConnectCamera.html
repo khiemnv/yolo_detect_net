@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>クォータートリム画像検査システム</title>
+    <link rel="icon" href="img/DetectDoorIcon_Setup.png" type="image/x-icon" />
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="vendor\bootstrap-5.2.3\css\bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="css\detectDoor.css" />
+    <!-- jQuery library -->
+    <script src="vendor\Jquery\jquery-3.6.1.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="vendor\bootstrap-5.2.3\js\bootstrap.min.js"></script>
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+      charset="UTF-8"
+    />
+  </head>
+
+  <body id="bodyMain" style="min-width: 600px">
+      <!-- #C0C0C0 -->
+      <div class="row topnav">
+          <div class="col-sm-5"></div>
+          <div class="col-sm-2" style="display: grid; align-content: center">
+              <div class="led-box" style="display: none">
+                  <div class="led-green"></div>
+              </div>
+          </div>
+          <div class="col-sm-5">
+              <!-- Button trigger modal -->
+              <div class="dropdown" style="float: right">
+                  <a href="#news" class="dropbtn">
+                      <img src="img/output-onlinepngtools.png" alt="icon Account" />
+                  </a>
+                  <div class="dropdown-content">
+                      <a href="#news"
+                         id="btn_Setting"
+                         data-bs-toggle="modal"
+                         data-bs-target="#settingModal"><img src="img/Setting.svg" alt="icon Setting" />設定</a>
+                      <a id="btnLogout" href="#"><img src="img/logout-20.png" alt="icon Setting" />ログアウト</a>
+                  </div>
+              </div>
+              <img id="disconnected_img"
+                   alt="disconnected"
+                   src="img/disconnected.png"
+                   style="display: none; float: right; width: 20px; margin: 14px 14px" />
+              <img id="take_sample_img"
+                   alt="tacke sample mode"
+                   src="img/Capture.png"
+                   style="display: none; float: right; width: 20px; margin: 14px 14px" />
+              <img id="delay_img"
+                   alt="delay"
+                   src="img/delay.png"
+                   style="display: none; float: right; width: 20px; margin: 14px 14px" />
+          </div>
+      </div>
+      <div class="bodyContent" style="display: none" id="bodyContentId">
+          <div class="row obj_center">
+              <div class="view_Camera">
+                  <img id="img_Result_inLeft"
+                       class="image_object"
+                       alt="Result"
+                       style="display: none" />
+                  <video id="video_inLeft" class="image_object" autoplay></video>
+                  <canvas id="canvas_inLeft"
+                          class="image_object"
+                          style="display: none"></canvas>
+                  <canvas id="rect_inLeft"
+                          width="4656"
+                          height="3496"
+                          class="rect"
+                          display="none"></canvas>
+                  <div class="count_down_container" style="display: none">
+                      <h5 class="count_down" id="count_down_id"></h5>
+                  </div>
+              </div>
+              <div class="view_Camera">
+                  <img id="img_Result_inRight"
+                       class="image_object"
+                       alt="Result"
+                       style="display: none" />
+                  <video id="video_inRight" class="image_object" autoplay></video>
+                  <canvas id="canvas_inRight"
+                          class="image_object"
+                          style="display: none"></canvas>
+                  <canvas id="rect_inRight"
+                          width="4656"
+                          height="3496"
+                          class="rect"
+                          display="none"></canvas>
+
+                  <div class="count_down_container" style="display: none">
+                      <h5 class="count_down" id="count_down_id2"></h5>
+                  </div>
+              </div>
+              <div class="viewbarcode" id="viewbarcodeId"></div>
+              <div class="view_Sample">
+                  <img id="img_Sample"
+                       class="image_object_Sample"
+                       alt="Sample"
+                       src="img/NoResult.jpg" />
+                  <img id="img_Sample_back"
+                       class="image_object_Sample"
+                       alt="Sample"
+                       src="img/NoResult.jpg"
+                       style="display: none" />
+                  <div class="img_sample_label" id="img_sample_label"></div>
+                  <div class="img_sample_label2" id="img_sample_label2"></div>
+              </div>
+
+              <div class="view_Camera" style="display: none">
+                  <img id="img_Result_outLeft"
+                       class="image_object"
+                       alt="Result"
+                       style="display: none" />
+                  <video id="video_outLeft" class="image_object" autoplay></video>
+                  <canvas id="canvas_outLeft"
+                          class="image_object"
+                          style="display: none"></canvas>
+              </div>
+              <div class="view_Camera" style="display: none">
+                  <img id="img_Result_outRight"
+                       class="image_object"
+                       alt="Result"
+                       style="display: none" />
+                  <video id="video_outRight" class="image_object" autoplay></video>
+                  <canvas id="canvas_outRight"
+                          class="image_object"
+                          style="display: none"></canvas>
+              </div>
+          </div>
+      </div>
+      <div class="viewImgScanBarcode"
+           id="viewImgScanBarcodeId"
+           style="display: none">
+          <img id="img_ScanBarcode"
+               class="image_object_barcode"
+               alt="Barcode"
+               src="img/barcode-scanner-icon.png" />
+      </div>
+      <div class="spinner" id="waitId" style="display: none">
+          <div class="spinner_msg_container">
+              <span id="waitMsgId"></span>
+          </div>
+          <img class="fit_container"
+               src="img/spinner.gif"
+               alt="ResultNGOK"
+               id="img_waitId" />
+      </div>
+      <div class="resultOKNG" id="resultId" style="display: none">
+          <!-- <div class="resultCircle" id="resultCircleId"> -->
+          <img src="img/ResultOK.png" alt="ResultNGOK" id="img_resultId" />
+          <!-- </div> -->
+      </div>
+      <div class="ng_notification">
+          <img style="width: 300px;" src="" id="result_history" />
+          <span class="ng_count" id="ng_count"></span>
+      </div>
+
+      <div class="login-form" id="loginFormId">
+          <form style="width: 40vh; height: 40vh; color: rgb(218, 72, 19)">
+              <div class="flex-row"
+                   style="
+            font-weight: bolder;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+          ">
+                  ログイン
+              </div>
+              <div class="flex-row">
+                  <label class="lf--label" for="username">
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                           width="16"
+                           height="16"
+                           fill="currentColor"
+                           class="bi bi-person"
+                           viewBox="0 0 16 16">
+                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                      </svg>
+                  </label>
+                  <input id="username"
+                         class="lf--input"
+                         placeholder="Username"
+                         type="text" />
+              </div>
+              <div class="flex-row">
+                  <label class="lf--label" for="password">
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                           width="16"
+                           height="16"
+                           fill="currentColor"
+                           class="bi bi-key"
+                           viewBox="0 0 16 16">
+                          <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                          <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                      </svg>
+                  </label>
+                  <input id="password"
+                         class="lf--input"
+                         placeholder="Password"
+                         type="password" />
+              </div>
+              <div class="flex-row">
+                  <input id="autologin" type="checkbox" class="checkbox-round" />
+                  <label class="checkauto">オートログイン</label>
+              </div>
+              <div class="flex-row">
+                  <!-- <input class='lf--submit' type='button' value='LOGIN' > -->
+                  <button class="lf--submit" type="button" id="btnCheck">LOGIN</button>
+              </div>
+          </form>
+      </div>
+      <footer class="footer">
+          <!-- <img src="img/SyncPartners.png" alt="logo SyncPartner">
+        <div>©2023 by SyncPartners</div> -->
+      </footer>
+      <!-- Modal -->
+      <div class="modal fade"
+           id="settingModal"
+           data-bs-backdrop="static"
+           data-bs-keyboard="false"
+           tabindex="-1"
+           aria-labelledby="exampleModalLabel"
+           aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">設定</h1>
+                      <button type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                              onclick="Cancel_Setting(this)"></button>
+                  </div>
+                  <div class="modal-body" id="modal_setting">
+                      <form>
+                          <fieldset>
+                              <legend>背景設定</legend>
+                              <div class="row">
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr1"
+                                             name="setting_background"
+                                             value="b1.jpg"
+                                             onclick="Change_Bgr('b1.jpg')" />
+                                      <span>背景1</span>
+                                  </label>
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr5"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('b5.jpg')"
+                                             value="b5.jpg" />
+                                      <span>背景5</span>
+                                  </label>
+                              </div>
+                              <div class="row">
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr2"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('b2.jpg')"
+                                             value="b2.jpg" />
+                                      <span>背景2</span>
+                                  </label>
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr6"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('b6.jpg')"
+                                             value="b6.jpg" />
+                                      <span>背景6</span>
+                                  </label>
+                              </div>
+                              <div class="row">
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr3"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('b3.jpg')"
+                                             value="b3.jpg" />
+                                      <span>背景3</span>
+                                  </label>
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr7"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('b7.png')"
+                                             value="b7.png" />
+                                      <span>背景7</span>
+                                  </label>
+                              </div>
+
+                              <div class="row">
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr4"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('b4.jpg')"
+                                             value="b4.jpg" />
+                                      <span>背景4</span>
+                                  </label>
+                                  <label style="width: 50%">
+                                      <input type="radio"
+                                             id="change_Bgr8"
+                                             name="setting_background"
+                                             onclick="Change_Bgr('背景8')"
+                                             value="背景8"
+                                             checked="checked" />
+                                      <span>背景なし</span>
+                                  </label>
+                              </div>
+                          </fieldset>
+                      </form>
+                      <form>
+                          <fieldset>
+                              <legend>情報</legend>
+                              <label id="info_FolderSave"></label>
+                          </fieldset>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                              onclick="Cancel_Setting()">
+                          閉じる
+                      </button>
+                      <button type="button"
+                              class="btn btn-primary"
+                              onclick="Apply_Setting()">
+                          保存する
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <script src="js\detectDoor.js"></script>
+  </body>
+</html>

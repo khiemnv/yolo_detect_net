@@ -15,10 +15,11 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("<model_path> <in_dir> <model_type> <out_dir>");
             string model_path = args[0]; // .onnx
             string in_dir = args[1];
             string model_type = args.Length > 2 ? args[2] : nameof(YoloModel8);
-            string out_dir = args.Length > 3 ? args[3] : Path.GetDirectoryName(model_path) + "\\output\\" + Path.GetFileNameWithoutExtension(in_dir);
+            string out_dir = args.Length > 3 ? args[3] : Path.GetDirectoryName(model_path) + "\\output\\" + Path.GetFileName(in_dir);
 
             YoloModelBase yolo = null;
             switch (model_type)
@@ -118,6 +119,7 @@ namespace ConsoleApp1
                     label = b.label.Name,
                     score = b.Score,
                     x = b.Rectangle.X,
+
                     y = b.Rectangle.Y,
                     w = b.Rectangle.Width,
                     h = b.Rectangle.Height,
