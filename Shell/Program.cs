@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using annotation;
+using OpenCvSharp;
 using System.Diagnostics;
 using Yolov;
 
@@ -27,12 +28,41 @@ if (true)
     var (angle, area) = PlotCV.Crop(i3,
         segs[0].mask,
         (segs[0].bounds.X, segs[0].bounds.Y, segs[0].bounds.Width, segs[0].bounds.Height),
-        i3.Replace(".jpeg", "_crop.jpeg"));
+        "crop.jpeg");
     Debug.WriteLine($"sample angle {angle}");
+
+
+    var originImage = new OpenCvSharp.Mat("crop.jpeg");
+    var cp = new ColorPalette();
+    cp.Init(new LabelConfig { _dict = ObjDetectYolo.labelDict });
+    foreach(var box in pcb.boxes)
+    {
+        var FontSize = 3;
+        var Thickness = 3;
+        Cv2.Rectangle(originImage, new Rect((int)box.X, (int)box.Y, (int)box.W, (int)box.H), Scalar.Blue, Thickness);
+        var baseLine = 5;
+        var labelSize = Cv2.GetTextSize(box.LabelName, HersheyFonts.HersheyDuplex, FontSize, 10, out baseLine);
+        var minX = (int)box.X;
+        var minY = (int)box.Y - labelSize.Height;
+        var maxX = minX + labelSize.Width;
+        if (minX > originImage.Width) { maxX = originImage.Width; }
+        if (minY < 0) { minY = 0; }
+        var maxY = (int)box.Y;
+        var labelRect = new Rect(minX, minY, maxX-minX, maxY-minY);
+        var color = cp.GetColor(box.LabelName).color;
+        var subImg = originImage.SubMat(labelRect);
+        var blueRect = subImg.Clone();
+        Cv2.Rectangle(blueRect, new Rect(0,0, maxX - minX, maxY - minY), Scalar.FromRgb(color.r,color.g, color.b), -1);
+        Cv2.AddWeighted(subImg, 0.5, blueRect, 0.5, 1.0, subImg);
+        Cv2.PutText(originImage, box.LabelName, new Point(box.X, box.Y), HersheyFonts.HersheyDuplex, FontSize, Scalar.White, Thickness);
+        originImage[labelRect] = subImg;
+        originImage.SaveImage("crop2.jpeg");
+    }
+    originImage.SaveImage("crop2.jpeg");
 
     var segmented = $"{x} {y} {w} {h} {angle} {area}";
 
-    var back_01 = @"C:\deploy\doordetect\workingDir\model_7230B289XA\sample_7230B289XA\output\back_01.xml";
-    var xmlTxt = Parser.ExportXml(folder: "", filename: Path.GetFileName(i3), path: "", pcb.boxes, segmented);
-    File.WriteAllText(back_01, xmlTxt);
+    //var back_01 = @"C:\deploy\doordetect\workingDir\model_7230B289XA\sample_7230B289XA\output\back_01.xml";
+    //var xmlTxt = Parser.ExportXml(folder: "", filename: Path.GetFileName(i3), path: "", pcb.boxes, segmented);
+    //File.WriteAllText(back_01, xmlTxt);
 }

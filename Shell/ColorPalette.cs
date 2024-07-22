@@ -7,7 +7,7 @@ namespace annotation
 {
     public class ColorPalette
     {
-        class rgb
+        public class rgb
         {
             public int r;
             public int g;
@@ -24,6 +24,7 @@ namespace annotation
 
         public class Brush
         {
+            public rgb color;
             public static Brush Red {get=> new Brush(); }
         }
         public Dictionary<string, Brush> d = new Dictionary<string, Brush>();
@@ -45,7 +46,7 @@ namespace annotation
                     new SolidBrush(Color.FromArgb(255, 0, 171, 169)),
             };
 #endif
-            Brush cb(rgb c) { return new Brush(); }
+            Brush cb(rgb c) { return new Brush { color = c }; }
             var okLst = new List<rgb> {
                 new rgb(0, 0, 255),
                     new rgb(0, 226, 0),
