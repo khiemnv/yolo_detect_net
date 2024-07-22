@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel;
+﻿//using ClosedXML.Excel;
 using comp;
 using FR;
 using System;
@@ -246,68 +246,68 @@ namespace annotation
         }
 
 
-        public static string ExportCompResult(CompShellEnv env, List<CompNode> lst)
-        {
-            var wkDir = env._wkDir;
-            var dt = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            var xlsx = Path.Combine(wkDir.path, $"{dt}_cmp.xlsx");
-            var modelD = new Dictionary<string, int>();
-            var cells = new List<(int row, int col, string val)>();
-            var row = 2;
-            var col = 1;
-            // 1st row [      ,     , modle          ]
-            //   n row [tsname, file, compare result,]
-            //            1       2     3
+        //public static string ExportCompResult(CompShellEnv env, List<CompNode> lst)
+        //{
+        //    var wkDir = env._wkDir;
+        //    var dt = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        //    var xlsx = Path.Combine(wkDir.path, $"{dt}_cmp.xlsx");
+        //    var modelD = new Dictionary<string, int>();
+        //    var cells = new List<(int row, int col, string val)>();
+        //    var row = 2;
+        //    var col = 1;
+        //    // 1st row [      ,     , modle          ]
+        //    //   n row [tsname, file, compare result,]
+        //    //            1       2     3
 
-            cells.Add((1, 2, "img"));
+        //    cells.Add((1, 2, "img"));
 
-            foreach (var ts in lst)
-            {
-                cells.Add((row, 1, ts.PhysicName));
-                row++;
-                foreach (var node in ts._nodes)
-                {
-                    var img = node.testImg;
-                    if (img == null) continue;
-                    if (img.results == null) continue;
+        //    foreach (var ts in lst)
+        //    {
+        //        cells.Add((row, 1, ts.PhysicName));
+        //        row++;
+        //        foreach (var node in ts._nodes)
+        //        {
+        //            var img = node.testImg;
+        //            if (img == null) continue;
+        //            if (img.results == null) continue;
 
-                    cells.Add((row, 2, node.PhysicName));
+        //            cells.Add((row, 2, node.PhysicName));
 
-                    foreach (var item in img.results)
-                    {
-                        if (!modelD.ContainsKey(item.modelName))
-                        {
-                            modelD.Add(item.modelName, modelD.Count);
-                        }
+        //            foreach (var item in img.results)
+        //            {
+        //                if (!modelD.ContainsKey(item.modelName))
+        //                {
+        //                    modelD.Add(item.modelName, modelD.Count);
+        //                }
 
-                        var iCol = 3 + modelD[item.modelName];
+        //                var iCol = 3 + modelD[item.modelName];
 
-                        if (item.diff == 0)
-                        {
-                            cells.Add((row, iCol, "OK"));
-                        }
-                        else
-                        {
-                            cells.Add((row, iCol, "NG\n" + item.diffJson));
-                        }
-                    }
-                    row++;
-                }
-            }
+        //                if (item.diff == 0)
+        //                {
+        //                    cells.Add((row, iCol, "OK"));
+        //                }
+        //                else
+        //                {
+        //                    cells.Add((row, iCol, "NG\n" + item.diffJson));
+        //                }
+        //            }
+        //            row++;
+        //        }
+        //    }
 
-            foreach (var p in modelD)
-            {
-                cells.Add((1, 3 + p.Value, p.Key));
-            }
+        //    foreach (var p in modelD)
+        //    {
+        //        cells.Add((1, 3 + p.Value, p.Key));
+        //    }
 
-            var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
-            foreach (var (iRow, iCol, v) in cells)
-            {
-                ws.Cell(iRow, iCol).Value = v;
-            }
-            wb.SaveAs(xlsx);
-            return xlsx;
-        }
+        //    var wb = new XLWorkbook();
+        //    var ws = wb.AddWorksheet("Sheet1");
+        //    foreach (var (iRow, iCol, v) in cells)
+        //    {
+        //        ws.Cell(iRow, iCol).Value = v;
+        //    }
+        //    wb.SaveAs(xlsx);
+        //    return xlsx;
+        //}
     }
 }

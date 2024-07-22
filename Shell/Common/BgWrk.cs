@@ -24,12 +24,11 @@ namespace annotation
             // init bg
             if (bg == null)
             {
-                var myTimer = new System.Windows.Forms.Timer() { Interval = 1000 };
                 int alarmCounter = 0;
-                myTimer.Tick += (s, e) =>
+                var myTimer = new Timer((s) =>
                 {
                     alarmCounter++;
-                };
+                });
                 bg = new BackgroundWorker()
                 {
                     WorkerReportsProgress = true,
@@ -54,14 +53,14 @@ namespace annotation
                     else
                     {
                         // start timer
-                        myTimer.Start();
+                        myTimer.Change(1000, -1);
                         alarmCounter = 0;
                     }
                 };
                 bg.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) =>
                 {
                     // stop timer & pogress
-                    myTimer.Stop();
+                    myTimer.Dispose();
 
                     // show result
                     var param = (BgParam)e.Result;

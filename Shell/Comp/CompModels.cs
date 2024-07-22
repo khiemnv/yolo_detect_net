@@ -1,5 +1,5 @@
 ﻿using annotation;
-using ClosedXML.Excel;
+//using ClosedXML.Excel;
 using Extensions;
 using Newtonsoft.Json;
 using System;
@@ -332,9 +332,9 @@ namespace comp
 
             // File.WriteAllText(Path.Combine(dir,"log.csv"), string.Join("\r\n",lines));
             var outxlsx = Path.Combine(Path.Combine(dir, "log.xlsx"));
-            ExportToXlsx(lines, outxlsx);
+            //ExportToXlsx(lines, outxlsx);
         }
-
+#if false
         private static void ExportToXlsx(List<List<string>> lines, string outxlsx)
         {
             var wb = new XLWorkbook();
@@ -352,7 +352,7 @@ namespace comp
             });
             wb.SaveAs(outxlsx);
         }
-
+#endif
         public TestImg CreateTestImg(string path)
         {
             var img = CreateTestImg(path, labelDict2);

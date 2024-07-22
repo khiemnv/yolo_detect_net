@@ -1,19 +1,12 @@
-﻿using ClosedXML.Excel;
-using comp;
+﻿using comp;
 using Extensions;
 using FR;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Yolov;
 using static annotation.BgWrk;
-using static annotation.Form1;
 
 namespace annotation
 {
@@ -835,6 +828,7 @@ namespace annotation
             }
         }
 
+#if false
         private static void CreateDictModelXlsx(string xlsx, Dictionary<int, string> dict)
         {
             var cells = new List<(int row, int col, string val)>() {
@@ -862,6 +856,8 @@ namespace annotation
             }
             wb.SaveAs(xlsx);
         }
+
+#endif
 
         public static string GetImgPath(AnntNode n)
         {
@@ -997,12 +993,12 @@ namespace annotation
             return objs;
         }
 
+#if false
         public static void ConvertDictXlsxToJson(string pathXlsx, string pathJson)
         {
             var labels = ReadDictXlsx(pathXlsx);
             File.WriteAllText(pathJson, labels.ToJson());
         }
-
         public static List<LabelExt> ReadDictXlsx(string path, string shName = "DictModel")
         {
             var labels = new List<LabelExt>();
@@ -1047,7 +1043,8 @@ namespace annotation
             }
             return labels;
         }
-
+#endif
+#if false
         public static (Dictionary<int, string> l_idxLabelDict, Dictionary<string, string> l_labelAliasDict) ReadDictModelXlsx(string path, string shName = "DictModel")
         {
             var l_idxLabelDict = new Dictionary<int, string>();
@@ -1087,14 +1084,12 @@ namespace annotation
 
             return (l_idxLabelDict, l_labelAliasDict);
         }
+#endif
     }
     public class DetectModel
     {
-        [JsonProperty("id")]
         public string Id { get; set; } = RepositoryHelper.NewId();
-        [JsonProperty("partNumber")]
         public string PartNumber { get; set; }
-        [JsonProperty("modelFile")]
         public string ModelFileId { get; set; }
     }
 }

@@ -122,7 +122,7 @@ namespace Yolov
             image.CopyTo(new Mat(max_image, roi));
 
             float factor = (float)max_image_length / (float)Math.Max(ModelInputHeight, ModelInputWidth);
-            Mat input_mat = CvDnn.BlobFromImage(max_image, 1.0 / 255.0, new OpenCvSharp.Size(input_shape[2], input_shape[3]), 0, true, false);
+            Mat input_mat = CvDnn.BlobFromImage(max_image, 1.0 / 255.0, new OpenCvSharp.Size(input_shape[2], input_shape[3]), new Scalar(0), true, false);
             Marshal.Copy(input_mat.Ptr(0), input_data, 0, input_data.Length);
 
             input_tensor.set_data<float>(input_data);
@@ -134,7 +134,7 @@ namespace Yolov
         private PredictionBoxCollection ParseOutput((int Width, int Height) image, float factor)
         {
             float[] output_data = output_tensor.get_data<float>(output_length);
-            Mat result_data = new Mat((int)output_shape[1], (int)output_shape[2], MatType.CV_32F, output_data);
+            Mat result_data = Mat.FromPixelData((int)output_shape[1], (int)output_shape[2], MatType.CV_32F, output_data);
             result_data = result_data.T();
 
             // Storage results list
@@ -199,7 +199,7 @@ namespace Yolov
         {
             var result = new ConcurrentBag<PredictionBox>();
             float[] output_data = output_tensor.get_data<float>(output_length);
-            Mat result_data = new Mat((int)output_shape[1], (int)output_shape[2], MatType.CV_32F, output_data);
+            Mat result_data = Mat.FromPixelData((int)output_shape[1], (int)output_shape[2], MatType.CV_32F, output_data);
 
             // Preprocessing output results
             Parallel.For(0, (int)output_shape[2], (int i) =>
@@ -251,7 +251,7 @@ namespace Yolov
             image.CopyTo(new Mat(max_image, roi));
 
             float factor = (float)max_image_length / Math.Max(ModelInputHeight, ModelInputWidth);
-            Mat input_mat = CvDnn.BlobFromImage(max_image, 1.0 / 255.0, new OpenCvSharp.Size(input_shape[2], input_shape[3]), 0, true, false);
+            Mat input_mat = CvDnn.BlobFromImage(max_image, 1.0 / 255.0, new OpenCvSharp.Size(input_shape[2], input_shape[3]), new Scalar(0), true, false);
             Marshal.Copy(input_mat.Ptr(0), input_data, 0, input_data.Length);
 
             input_tensor.set_data<float>(input_data);
@@ -278,7 +278,7 @@ namespace Yolov
             var output_length2 = (int)output_tensor1.get_size();
             float[] output_data2 = output_tensor1.get_data<float>(output_length2);
             var sizes = new[] { (int)output_shape2[1], (int)output_shape2[2], (int)output_shape2[3] };
-            Mat result_data2 = new Mat(sizes, MatType.CV_32F, output_data2);
+            Mat result_data2 = Mat.FromPixelData(sizes, MatType.CV_32F, output_data2);
 
             var segs = new List<SegmentationBoundingBox>();
             var maskChannelCount = (int)output_shape[1] - 4 - ModelClassesCount;
