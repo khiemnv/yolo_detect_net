@@ -1,0 +1,53 @@
+{
+  //"baseUrl": "https://localhost:5000",
+  "baseUrl": "https://192.168.1.90:8080",
+  //"baseUrl": "https://AI-GAIKAN3:8080",
+  "accessToken": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjdiYjIyN2Q1LWY1ZDktNGU0NS05NGU4LTdiMjMzZmMyNTQ0NyIsIm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImp0aSI6IjBkZmU5NjY1LTBhYjQtNDdiMy05ZmM2LTZlNTNmMzRkODI0NyIsIm5iZiI6MTcxMDMyMDgwNywiZXhwIjoxODA0OTI4ODA3LCJpYXQiOjE3MTAzMjA4MDcsImlzcyI6Imh0dHBzOi8vZG9vcmRldGVjdC5jb20vIiwiYXVkIjoiaHR0cHM6Ly9kb29yZGV0ZWN0LmNvbS8ifQ.HOVV9jTq47KbjFrs03InwpOialo7L6fRmHm5TIFupMNQmwwVN5RKuLx1DV8KpmBPjaEKAY5hF6wDXXxLSujWsg",
+  "asstModeless": true,
+  "cleanRule": {
+    "fromNow": 7 // delete old file that created [n] days from now
+  },
+  "detectionSetting": {
+    "accuracy": 0.5,
+    "delta": 300
+  },
+  "takeSampleMode": false,
+  "delayCapture": 5, // seconds
+  "delayCaptureEnable": false, // seconds
+  "pinNG": true,
+  "preprocessConfig": {
+    "mode": "manual", // none, auto, manual,
+    "defaultModel": "crop\\openvino\\best.xml",
+    "cropLeft": [ 121, 100, 4400, 3000 ], //[ 121, 625, 4400, 2300 ], //x,y,w,h
+    "cropRight": [ 121, 100, 4400, 3000 ] //[ 121, 625, 4400, 2300 ] //x,y,w,h
+  },
+  "workingDir": "C:\\deploy\\doordetect\\workingDir",
+  //"uploadDir": "C:\\deploy\\doordetect\\upload",
+  "autoLogin": true,
+  "modelDetect": "openvino", // yolov8x, faster_rcnn_resnet152, openvino, auto
+  "deviceDetect": "auto", // auto, multi (GPU INTEL, CPU), cuda
+  "splitDetect": false,
+  "showPercent": false,
+  "fullScreen": false,
+  "uploadConfig": {
+    "enable": true,
+    "retries": [ 5, 15, 25 ], // seconds
+    "uploadSync": false,
+    "subscribe": true,
+    "ngTimeout": 30, // seconds
+    "uploadInterval": 2, // days
+    "uploadRes": false,
+    "useSqliteDb": true,
+    "upload1": false // create new thread to upload result
+  },
+  "updateConfig": {
+    "enable": false,
+    "lastUpdatedDate": "2024-05-15",
+    "timeOut": 300 // seconds
+  },
+  "enableRC": false,
+  "useSignalR": false,
+  "autoRestart": false,
+  "restartTime": "06:45~07:45", // example: 06:45~07:45, hh:mm~hh:mm, set <empty> to disable
+  "autoReconnectCamera": true
+}
