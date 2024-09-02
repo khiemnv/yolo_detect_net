@@ -464,7 +464,11 @@ namespace Services
                                 }
                             }
                             b = quarterTrimRepository.Post(qrt);
-                            req.JsonData = qrt.ToJson(); // update QuarterTrim.No
+                            if (b)
+                            {
+                                // if susscess, update QuarterTrim.No
+                                req.JsonData = qrt.ToJson();
+                            }
                             Logger.Debug($"Post {req.ObjType} {qrt.Id} {b}");
                         }
                         break;

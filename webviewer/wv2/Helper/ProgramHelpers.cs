@@ -232,7 +232,6 @@ public static class ProgramHelpers
             }
         }
 
-
         string txtPath = Path.Combine(capture_output, $"co9_{index}.txt");
         string imgPath = Path.Combine(capture_output, $"co_{index}.jpeg");
         imageFile.Save(imgPath);
@@ -242,8 +241,6 @@ public static class ProgramHelpers
         string text = textJudge + "\n" + textName + "\n" + textScore;
         File.WriteAllText(txtPath, text);
         return imgPath;
-
-
     }
 
     private static Rectangle ProcessOverlap(Font font, List<ImgObject> outObjs, Image imageFile, Graphics G, ImgObject part, Rectangle labelRec, Rectangle frameRec, bool res)

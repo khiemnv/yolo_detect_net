@@ -24,6 +24,7 @@ namespace Services
                 if (response.IsSuccessStatusCode)
                 {
                     raw = response.Content.ReadAsStringAsync().Result;
+                    Logger.Error(raw);
                 }
                 else
                 {

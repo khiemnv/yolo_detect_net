@@ -37,7 +37,7 @@ namespace wv2
 
             var tbl = new TableLayoutPanel();
             tbl.Dock = DockStyle.Fill;
-            tbl.Controls.Add(btn, 0, 0);
+            //tbl.Controls.Add(btn, 0, 0);
             tbl.Controls.Add(webView, 0, 1);
             Controls.Add(tbl);
 
@@ -92,7 +92,49 @@ namespace wv2
                 RestartCb(this);
             });
             ProgramHelpers.srv.Start();
+
+
+            Size = new System.Drawing.Size(1250, 680);
+            StartPosition = FormStartPosition.CenterScreen;
+            this.FormClosing += new FormClosingEventHandler(OnFormClosing);
+
+            if (GetBaseConfig().FullScreen)
+            {
+                // enter fullscreen
+                WindowState = FormWindowState.Normal;
+                FormBorderStyle = FormBorderStyle.None;
+                WindowState = FormWindowState.Maximized;
+            }
         }
+        void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (ProgramHelpers.srv.IsAlive())
+            {
+                object w(object arg)
+                {
+                    try
+                    {
+                        Logger.Debug("StopAndWait");
+                        ProgramHelpers.srv.StopAndWait();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex.Message);
+                        return false;
+                    }
+                }
+                void c(object result)
+                {
+                    ((Form)sender).Close();
+                }
+                BgExecute(w, c);
+                e.Cancel = true;
+            }
+            Logger.Debug($"FormClosing {e.Cancel}");
+            return;
+        }
+
         void RestartCb(Form f)
         {
             if (bg != null) { WaitForBgComplete(); }

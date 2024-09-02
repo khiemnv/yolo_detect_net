@@ -1,8 +1,8 @@
 {
-  //"baseUrl": "https://localhost:5000",
-  "baseUrl": "https://192.168.1.90:8080",
+  "baseUrl": "https://localhost:5000",
+  //"baseUrl": "https://192.168.1.90:8080",
   //"baseUrl": "https://AI-GAIKAN3:8080",
-  "accessToken": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjdiYjIyN2Q1LWY1ZDktNGU0NS05NGU4LTdiMjMzZmMyNTQ0NyIsIm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImp0aSI6IjBkZmU5NjY1LTBhYjQtNDdiMy05ZmM2LTZlNTNmMzRkODI0NyIsIm5iZiI6MTcxMDMyMDgwNywiZXhwIjoxODA0OTI4ODA3LCJpYXQiOjE3MTAzMjA4MDcsImlzcyI6Imh0dHBzOi8vZG9vcmRldGVjdC5jb20vIiwiYXVkIjoiaHR0cHM6Ly9kb29yZGV0ZWN0LmNvbS8ifQ.HOVV9jTq47KbjFrs03InwpOialo7L6fRmHm5TIFupMNQmwwVN5RKuLx1DV8KpmBPjaEKAY5hF6wDXXxLSujWsg",
+  "accessToken": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIyZDRkZTUxLWJjOTUtNDQ3ZC05MjdiLTViOTE3YTU4ZWM1YSIsInVuaXF1ZV9uYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJqdGkiOiJkZmU4ZDNhNS04ZWRkLTRhZjctOGM1OS0xZTAzOTZkN2FlMTQiLCJuYmYiOjE3MjQ2NTU3NTgsImV4cCI6MTgxOTI2Mzc1OCwiaWF0IjoxNzI0NjU1NzU4LCJpc3MiOiJodHRwczovL2Rvb3JkZXRlY3QuY29tLyIsImF1ZCI6Imh0dHBzOi8vZG9vcmRldGVjdC5jb20vIn0.UotGJCalwgUBRxzrAhQNlMFdt27XWPZShn5UYzjs70vGjqWsA6s0aipC1Sr8VWa0vkTgpoDEJMwhlwrEAYod_A",
   "asstModeless": true,
   "cleanRule": {
     "fromNow": 7 // delete old file that created [n] days from now
@@ -49,5 +49,5 @@
   "useSignalR": false,
   "autoRestart": false,
   "restartTime": "06:45~07:45", // example: 06:45~07:45, hh:mm~hh:mm, set <empty> to disable
-  "autoReconnectCamera": true
+  "autoReconnectCamera": false
 }

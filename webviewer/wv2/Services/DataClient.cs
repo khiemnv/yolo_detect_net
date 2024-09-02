@@ -492,15 +492,21 @@ namespace Services
             if (ret.Errors != null)
             {
                 var msg = ret.Errors[0].Message;
-                var apiErr = msg.FromJson<ApiError>();
-                if (apiErr != null && apiErr.ErrorCode == "E201")
+                try
                 {
-                    // if bc was saved, return ok
-                    return new BarcodeCounter { Id = bc.Id };
+                    var apiErr = msg.FromJson<ApiError>();
+                    if (apiErr != null && apiErr.ErrorCode == "E201")
+                    {
+                        // if bc was saved, return ok
+                        return new BarcodeCounter { Id = bc.Id };
+                    }
+                    else
+                    {
+                        Logger.Error(msg);
+                    }
                 }
-                else
-                {
-                    Logger.Error(apiErr.ErrorMessage);
+                catch {
+                    Logger.Error(msg);
                 }
             }
             return ret.Data.Output;

@@ -2,3 +2,7 @@
 /packages
 /ConsoleApp1/bin
 /ConsoleApp1/obj
+*.bak
+bin
+obj
+.vs
