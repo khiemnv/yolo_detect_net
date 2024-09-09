@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OCR Example</title>
+    <style>
+        img {
+            width: 500px;
+        }
+
+        pre {
+            width: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img id="img" src='assets/cn-01.jpg'>
+        <select id="lang_cmb">
+            <option value="eng">english</option>
+            <option value="jpn">japanese</option>
+        </select>
+        <button id="detect_btn">detect</button>
+        <pre id="result"></pre>
+    </div>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <script>
+        async function main() {
+            var lang = document.getElementById("lang_cmb").value;
+            const worker = await Tesseract.createWorker(lang);
+
+            (async () => {
+                var src = document.getElementById("img").src;
+                const { data: { text } } = await worker.recognize(src);
+                console.log(text);
+                document.getElementById("result").innerText = text;
+                await worker.terminate();
+            })();
+        }
+
+        document.getElementById("detect_btn").onclick = main;
+
+        var g_img = document.getElementById("img")
+        g_img.ondragover = (ev) => {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "move";
+        }
+        g_img.ondrop = (ev) => {
+            ev.preventDefault();
+
+            if (ev.dataTransfer.files.length > 0) {
+                var file = ev.dataTransfer.files[0]
+                g_img.src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+</body>
+
+</html>

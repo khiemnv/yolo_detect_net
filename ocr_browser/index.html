@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OCR Example</title>
+    <style>
+      .result {
+  display: flex;
+}
+
+.hide {
+  visibility: hidden;
+}
+    </style>
+  </head>
+  <body>
+    <h1 id="title">OCR is Loading</h1>
+    <div>
+      <a href="https://github.com/gutenye/ocr">Star me on GitHub</a>
+    </div>
+    <div>
+      <input type="file" id="input-image" />
+      <!-- <img id="img1" src="assets/cn-01.jpg"/> -->
+      <br />
+      <button id="process_btn">process</button>
+      <div id="performance"></div>
+    </div>
+    <canvas id="canvas_id" style="display: none;"></canvas>
+    <div style="border: solid 1px;" class="result">
+      <img id="result-image" style="width: 200px;height: 200px;" src="assets/cn-01.jpg"/>
+      <pre id="result-text"></pre>
+    </div>
+    <div style="border: solid 1px; display: none;">
+      <label>Debug Image</label>
+      <canvas id="canvas_debug" style="width: 200px;height: 200px;"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+    <script src="/opencv.js"></script>
+    <script src="/imageraw.js"></script>
+    <script src="/fileutils.js"></script>
+    <script src="/modelbase.js"></script>
+    <script src="/detection.js"></script>
+    <script src="/recognition.js"></script>
+    <script src="/clipper.js"></script>
+    <script src="/browser-example.js"></script>
+    <script>
+      var img = document.getElementById("result-image")
+      document.getElementById("canvas_id").getContext("2d").drawImage(img, 0, 0);
+    </script>
+  </body>
+</html>
