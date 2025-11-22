@@ -60,8 +60,9 @@ class Recognition extends ModelBase {
     return result;
   }
   decodeText(output) {
-    const data = output;
-    const predLen = data.dims[2];
+    // console.log('Recognition output:', output);
+    const data = output; // dim: 1, 33, 4401
+    const predLen = data.dims[2]; // 4401 - dictionary length
     const line = [];
     let ml = data.dims[0] - 1;
     for (let l = 0; l < data.data.length; l += predLen * data.dims[1]) {
@@ -74,7 +75,9 @@ class Recognition extends ModelBase {
         predsProb.push(tmpMax);
         predsIdx.push(tmpIdx);
       }
+      // console.log('Predicted indices:', predsIdx);
       line[ml] = decode(this._dictionary, predsIdx, predsProb, true);
+      // console.log('Recognized text:', line[ml].text);
       ml--;
     }
     return line;
@@ -130,7 +133,7 @@ function calculateBox({
     mainLine[i]['box'] = b;
   }
   mainLine = mainLine.filter(x => x.mean >= 0.5);
-  mainLine = afAfRec(mainLine);
+  // mainLine = afAfRec(mainLine); // if any char not detedted, skip this line
   return mainLine;
 }
 function afAfRec(l) {
