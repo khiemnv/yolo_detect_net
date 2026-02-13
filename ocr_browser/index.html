@@ -1,53 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OCR Example</title>
-    <style>
-      .result {
-  display: flex;
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OCR Lens</title>
+
+<style>
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+  background: radial-gradient(circle at top,#0f172a,#020617);
+  color:white;
 }
 
-.hide {
-  visibility: hidden;
+.app{
+  max-width:1200px;
+  margin:auto;
+  padding:30px 20px;
 }
-    </style>
-  </head>
-  <body>
-    <h1 id="title">OCR is Loading</h1>
-    <div>
-      <a href="https://github.com/gutenye/ocr">Star me on GitHub</a>
-    </div>
-    <div>
-      <input type="file" id="input-image" />
-      <!-- <img id="img1" src="assets/cn-01.jpg"/> -->
-      <br />
-      <button id="process_btn">process</button>
+
+.header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.header h1{
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.card{
+  background: rgba(255,255,255,0.05);
+  border-radius:18px;
+  padding:20px;
+  backdrop-filter: blur(20px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.5);
+}
+
+.upload{
+  border:2px dashed rgba(255,255,255,0.2);
+  border-radius:14px;
+  padding:30px;
+  text-align:center;
+  transition:0.2s;
+}
+
+.upload.drag{
+  border-color:#38bdf8;
+  background: rgba(56,189,248,0.1);
+}
+
+.upload input{
+  display:none;
+}
+
+.upload-label{
+  cursor:pointer;
+  font-size:18px;
+}
+
+.controls{
+  margin-top:15px;
+}
+
+.btn{
+  background:#38bdf8;
+  border:none;
+  padding:10px 22px;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:#67e8f9;
+}
+
+.result{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns: 420px 1fr;
+  gap:20px;
+}
+
+.preview{
+  background:black;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+}
+
+#result-image{
+  max-width:400px;
+  max-height:400px;
+}
+
+.text-panel{
+  background:#020617;
+  border-radius:14px;
+  padding:18px;
+  overflow:auto;
+}
+
+#result-text{
+  color:#22c55e;
+  font-family: Consolas, monospace;
+  font-size:14px;
+  white-space: pre-wrap;
+}
+
+.loading{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  display:none;
+}
+
+@media(max-width:900px){
+  .result{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="loading" id="loading">Processing OCR...</div>
+
+<div class="app">
+
+  <div class="header">
+    <h1>🔍 OCR Lens Mini</h1>
+    <h5 id="title">OCR is Loading...</h5>
+  </div>
+
+
+  <div class="card">
+
+    <div class="upload" id="drop-zone">
+      <label class="upload-label">
+        📂 Click to upload or Paste / Drag image
+        <input type="file" id="input-image" accept="image/*">
+      </label>
+
+      <div class="controls">
+        <button id="process_btn" class="btn">Process OCR</button>
+      </div>
+
       <div id="performance"></div>
     </div>
-    <canvas id="canvas_id" style="display: none;"></canvas>
-    <div style="border: solid 1px;" class="result">
-      <img id="result-image" style="width: 200px;height: 200px;" src="assets/cn-01.jpg"/>
-      <pre id="result-text"></pre>
+
+    <canvas id="canvas_id" style="display:none"></canvas>
+    <canvas id="canvas_debug" style="display:none"></canvas>
+
+    <div class="result">
+      <div class="preview">
+        <img id="result-image"/>
+      </div>
+
+      <div class="text-panel">
+        <pre id="result-text">OCR result will appear here...</pre>
+      </div>
     </div>
-    <div style="border: solid 1px; display: none;">
-      <label>Debug Image</label>
-      <canvas id="canvas_debug" style="width: 200px;height: 200px;"></canvas>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
-    <script src="/opencv.js"></script>
-    <script src="/imageraw.js"></script>
-    <script src="/fileutils.js"></script>
-    <script src="/modelbase.js"></script>
-    <script src="/detection.js"></script>
-    <script src="/recognition.js"></script>
-    <script src="/clipper.js"></script>
-    <script src="/browser-example.js"></script>
-    <script>
-      var img = document.getElementById("result-image")
-      document.getElementById("canvas_id").getContext("2d").drawImage(img, 0, 0);
-    </script>
-  </body>
+
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+<script src="./opencv.js"></script>
+<script src="./imageraw.js"></script>
+<script src="./fileutils.js"></script>
+<script src="./modelbase.js"></script>
+<script src="./detection.js"></script>
+<script src="./recognition.js"></script>
+<script src="./clipper.js"></script>
+<script src="./browser-example.js"></script>
+<script>
+const img = document.getElementById("result-image");
+const canvas = document.getElementById("canvas_id");
+const ctx = canvas.getContext("2d");
+const dropZone = document.getElementById("drop-zone");
+const fileInput = document.getElementById("input-image");
+const loading = document.getElementById("loading");
+const processBtn = document.getElementById("process_btn");
+
+/* ========= IMAGE LOAD ========= */
+
+function loadImage(file){
+  const reader = new FileReader();
+
+  reader.onload = e=>{
+    img.src = e.target.result;
+
+    img.onload = ()=>{
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img,0,0);
+      
+      // ⭐ AUTO PROCESS
+      processBtn.click();
+    };
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* ========= FILE SELECT ========= */
+
+fileInput.addEventListener("change", e=>{
+  if(e.target.files[0]) loadImage(e.target.files[0]);
+});
+
+/* ========= DRAG DROP ========= */
+
+dropZone.addEventListener("dragover", e=>{
+  e.preventDefault();
+  dropZone.classList.add("drag");
+});
+
+dropZone.addEventListener("dragleave", ()=>{
+  dropZone.classList.remove("drag");
+});
+
+dropZone.addEventListener("drop", e=>{
+  e.preventDefault();
+  dropZone.classList.remove("drag");
+
+  if(e.dataTransfer.files[0]){
+    loadImage(e.dataTransfer.files[0]);
+  }
+});
+
+/* ========= PASTE ========= */
+
+document.addEventListener("paste", e=>{
+  const items = e.clipboardData.items;
+
+  for(let i=0;i<items.length;i++){
+    if(items[i].type.indexOf("image")!==-1){
+      loadImage(items[i].getAsFile());
+    }
+  }
+});
+
+/* ========= PROCESS BUTTON ========= */
+document.getElementById("process_btn").onclick = async (event) => {
+  event.preventDefault();
+  loading.style.display = "flex";
+  resultTextEl.textContent = "OCR processing...";
+
+  setTimeout(async () => {
+    try {    
+      var imageUrl = document.querySelector("#result-image").src;
+      const { text, raw, duration } = await runOcr({ imageUrl });
+      console.log(raw, "\nDuration:", duration);
+      resultTextEl.textContent = text;
+      performanceEl.textContent = `Performance: ${duration}ms (Close Chrome DevTools to get accureate result)`;
+    } catch (error) {
+      console.error("Error during OCR processing:", error);
+      resultTextEl.textContent = "An error occurred during OCR processing.";
+    }
+
+    loading.style.display = "none";
+  }, 100);
+};
+
+</script>
+
+</body>
 </html>
